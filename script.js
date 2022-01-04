@@ -16,7 +16,6 @@ if (navigator.geolocation)
         const { latitude } = position.coords;
         const { longitude } = position.coords;
         const coords = [latitude,longitude];
-        console.log(`https://www.google.com/maps/@${latitude},${longitude}z`);
 
         const map = L.map('map').setView(coords, 13);
 
@@ -24,9 +23,22 @@ if (navigator.geolocation)
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        L.marker(coords).addTo(map)
-            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+        map.on('click',function(mapEvent){
+            const {lat , lng} = mapEvent.latlng;
+
+            L.marker([lat,lng]).addTo(map)
+            .bindPopup(L.popup({
+                maxWidth : 250 ,
+                minWidth : 100 ,
+                autoClose : false ,
+                closeOnClick : false ,
+                className : 'running-popup'
+
+            }))
+            .setPopupContent("WORKOUT")
             .openPopup();
+        })
+
     }, function () {
         alert("could not get your location");
     });
